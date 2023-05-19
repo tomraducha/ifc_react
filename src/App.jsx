@@ -1,9 +1,9 @@
-import { init } from "./ifc";
 import { useEffect } from "react";
+import ifc from "./ifc";
 
 function App() {
   useEffect(() => {
-    init();
+    ifc();
   });
 
   return (

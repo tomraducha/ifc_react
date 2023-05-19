@@ -25,24 +25,14 @@ import {
 
 import { IFCLoader } from "web-ifc-three/IFCLoader";
 
-function init() {
+function ifc() {
   const ifcapi = new IfcAPI();
 
   //Sets up the IFC loading
-  const ifcModels = [];
+  // const ifcModels = [];
   const raycaster = new Raycaster();
   raycaster.firstHitOnly = true;
   const mouse = new Vector2();
-
-  async function loadIFC() {
-    await ifcLoader.ifcManager.setWasmPath("../wasm/");
-    ifcLoader.load("../../IFC/01.ifc", (ifcModel) => {
-      ifcModels.push(ifcModel);
-      scene.add(ifcModel);
-    });
-  }
-
-  loadIFC();
 
   //Creates the Three.js scene
   const scene = new Scene();
@@ -141,6 +131,16 @@ function init() {
     false
   );
 
+  // async function loadIFC() {
+  //   await ifcLoader.ifcManager.setWasmPath("../../wasm/");
+  //   ifcLoader.load("../../../IFC/01.ifc", (ifcModel) => {
+  //     ifcModels.push(ifcModel);
+  //     scene.add(ifcModel);
+  //   });
+  // }
+
+  // loadIFC();
+
   /**
    * Requests the data from the url
    *
@@ -187,37 +187,23 @@ function init() {
    * @param {string} ifcFileLocation
    */
   function initIfcModel(ifcFileLocation, modelType) {
-    ifcapi
-      .Init()
-      .then(() => {
-        getIfcFile(ifcFileLocation)
-          .then((ifcData) => {
-            modelID = ifcapi.OpenModel(ifcData);
-            let isModelOpened = ifcapi.IsModelOpen(modelID);
-            let elements = getAllElements(modelID, modelType);
+    ifcapi.Init().then(() => {
+      getIfcFile(ifcFileLocation).then((ifcData) => {
+        modelID = ifcapi.OpenModel(ifcData);
+        // let isModelOpened = ifcapi.IsModelOpen(modelID);
+        let elements = getAllElements(modelID, modelType);
 
-            if (modelType === IFCSPACE) {
-              const longNames = elements.map(
-                (element) => element.LongName.value
-              );
-              console.log(longNames);
-            } else {
-              const names = elements.map((element) => element.Name.value);
-              console.log(names);
-            }
+        if (modelType === IFCSPACE) {
+          const longNames = elements.map((element) => element.LongName.value);
+          console.log(longNames);
+        } else {
+          const names = elements.map((element) => element.Name.value);
+          console.log(names);
+        }
 
-            ifcapi.CloseModel(modelID);
-          })
-          .catch((error) => {
-            console.error(
-              "Erreur lors de la récupération du fichier IFC : ",
-              error
-            );
-          });
-      })
-      .catch((error) => {
-        console.error("Erreur lors de l'initialisation de ifcapi : ", error);
+        ifcapi.CloseModel(modelID);
       });
+    });
   }
 
   function initIfcSite(ifcFileLocation) {
@@ -237,4 +223,4 @@ function init() {
   }
 }
 
-export { init };
+export default ifc;
