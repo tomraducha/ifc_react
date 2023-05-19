@@ -8,9 +8,42 @@ import {
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { Raycaster, Vector2 } from "three";
+import {
+  acceleratedRaycast,
+  computeBoundsTree,
+  disposeBoundsTree,
+} from "three-mesh-bvh";
+
+import {
+  IfcAPI,
+  IFCSPACE,
+  IFCSITE,
+  IFCBUILDING,
+  IFCBUILDINGSTOREY,
+} from "web-ifc/web-ifc-api";
+
 import { IFCLoader } from "web-ifc-three/IFCLoader";
 
 function init() {
+  const ifcapi = new IfcAPI();
+
+  //Sets up the IFC loading
+  const ifcModels = [];
+  const raycaster = new Raycaster();
+  raycaster.firstHitOnly = true;
+  const mouse = new Vector2();
+
+  async function loadIFC() {
+    await ifcLoader.ifcManager.setWasmPath("../wasm/");
+    ifcLoader.load("../../IFC/01.ifc", (ifcModel) => {
+      ifcModels.push(ifcModel);
+      scene.add(ifcModel);
+    });
+  }
+
+  loadIFC();
+
   //Creates the Three.js scene
   const scene = new Scene();
 
@@ -81,8 +114,14 @@ function init() {
     renderer.setSize(size.width, size.height);
   });
 
+  let modelID = 0;
   // Sets up the IFC loading
   const ifcLoader = new IFCLoader();
+  ifcLoader.ifcManager.setupThreeMeshBVH(
+    computeBoundsTree,
+    disposeBoundsTree,
+    acceleratedRaycast
+  );
   ifcLoader.ifcManager.setWasmPath("../wasm/");
   const input = document.getElementById("file-input");
   input.addEventListener(
@@ -90,6 +129,10 @@ function init() {
     (changed) => {
       const file = changed.target.files[0];
       var ifcURL = URL.createObjectURL(file);
+      initIfcSpace(ifcURL);
+      initIfcSite(ifcURL);
+      initIfcBuilding(ifcURL);
+      initIfcBuildingStorey(ifcURL);
       ifcLoader.load(ifcURL, (ifcModel) => {
         scene.add(ifcModel);
         console.log(ifcModel);
@@ -97,6 +140,101 @@ function init() {
     },
     false
   );
+
+  /**
+   * Requests the data from the url
+   *
+   * @param {string} url
+   * @returns
+   */
+  function getIfcFile(url) {
+    return new Promise((resolve, reject) => {
+      var oReq = new XMLHttpRequest();
+      oReq.responseType = "arraybuffer";
+      oReq.addEventListener("load", () => {
+        resolve(new Uint8Array(oReq.response));
+      });
+      oReq.open("GET", url);
+      oReq.send();
+    });
+  }
+
+  /**
+   * Gets the elements of the requested model
+   *
+   * @param {string} modelID The model ID
+   * @param {string} model The model type to retrieve
+   * @returns
+   */
+  function getAllElements(modelID, model) {
+    // Get all the propertyset lines in the IFC file
+    let lines = ifcapi.GetLineIDsWithType(modelID, model);
+    let lineSize = lines.size();
+    let spaces = [];
+    for (let i = 0; i < lineSize; i++) {
+      // Getting the ElementID from Lines
+      let relatedID = lines.get(i);
+      // Getting Element Data using the relatedID
+      let relDefProps = ifcapi.GetLine(modelID, relatedID);
+      spaces.push(relDefProps);
+    }
+    return spaces;
+  }
+
+  /**
+   * Initializes the ifcApi to request data.
+   *
+   * @param {string} ifcFileLocation
+   */
+  function initIfcModel(ifcFileLocation, modelType) {
+    ifcapi
+      .Init()
+      .then(() => {
+        getIfcFile(ifcFileLocation)
+          .then((ifcData) => {
+            modelID = ifcapi.OpenModel(ifcData);
+            let isModelOpened = ifcapi.IsModelOpen(modelID);
+            let elements = getAllElements(modelID, modelType);
+
+            if (modelType === IFCSPACE) {
+              const longNames = elements.map(
+                (element) => element.LongName.value
+              );
+              console.log(longNames);
+            } else {
+              const names = elements.map((element) => element.Name.value);
+              console.log(names);
+            }
+
+            ifcapi.CloseModel(modelID);
+          })
+          .catch((error) => {
+            console.error(
+              "Erreur lors de la récupération du fichier IFC : ",
+              error
+            );
+          });
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'initialisation de ifcapi : ", error);
+      });
+  }
+
+  function initIfcSite(ifcFileLocation) {
+    initIfcModel(ifcFileLocation, IFCSITE);
+  }
+
+  function initIfcBuilding(ifcFileLocation) {
+    initIfcModel(ifcFileLocation, IFCBUILDING);
+  }
+
+  function initIfcBuildingStorey(ifcFileLocation) {
+    initIfcModel(ifcFileLocation, IFCBUILDINGSTOREY);
+  }
+
+  function initIfcSpace(ifcFileLocation) {
+    initIfcModel(ifcFileLocation, IFCSPACE);
+  }
 }
 
 export { init };
