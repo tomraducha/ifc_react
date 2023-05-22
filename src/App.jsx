@@ -1,23 +1,21 @@
-import { useEffect } from "react";
-import ifc from "./ifc";
+import Header from "./components/Header";
+import InputFile from "./components/InputFile";
+import ThreeCanvas from "./components/ThreeCanvas";
+import { Box } from "@mui/material";
+import Menu from "./components/Menu";
+import useIfc from "./hooks/useIfc";
 
 function App() {
-  useEffect(() => {
-    ifc();
-  });
+  const { name } = useIfc();
 
   return (
     <>
-      <div className="header">
-        <h1>Bienvenue chez Vayandata</h1>
-      </div>
-      <div className="input">
-        <input type="file" name="load" id="file-input" />
-      </div>
-      <div id="output"></div>
-      <div className="canvas">
-        <canvas id="three-canvas"></canvas>
-      </div>
+      <Header />
+      <InputFile />
+      <Box sx={{ flexDirection: "row" }}>
+        <Menu name={name} />
+        <ThreeCanvas />
+      </Box>
     </>
   );
 }
