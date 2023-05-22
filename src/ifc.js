@@ -112,7 +112,7 @@ function ifc() {
     disposeBoundsTree,
     acceleratedRaycast
   );
-  ifcLoader.ifcManager.setWasmPath("../wasm/");
+  ifcLoader.ifcManager.setWasmPath("./public/");
   const input = document.getElementById("file-input");
   input.addEventListener(
     "change",
