@@ -24,6 +24,7 @@ import {
   IFCBUILDINGSTOREY,
 } from "web-ifc/web-ifc-api";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
+// import { viewer } from "web-ifc-viewer";
 
 export default function useIfc() {
   const [name, setName] = useState({
@@ -137,7 +138,22 @@ export default function useIfc() {
       false
     );
 
+    // window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
+    // window.onclick = () => viewer.IFC.selector.pickIfcItem(true);
+    // window.onclick = async () => {
+    //   const { modelID, id } = await viewer.IFC.selector.pickIfcItem(true);
+    //   const props = await viewer.IFC.getProperties(modelID, id, true, false);
+    //   console.log(props);
+    // };
+    // window.ondblclick = viewer.IFC.selector.highlightIfcItem(true);
+    // window.onkeydown = (event) => {
+    //   if (event.code === "KeyC") {
+    //     viewer.IFC.selector.unpickIfcItems();
+    //     viewer.IFC.selector.unHighlightIfcItems();
+    //   }
+    // };
     /**
+     *
      * Requests the data from the url
      *
      * @param {string} url
@@ -186,8 +202,11 @@ export default function useIfc() {
         getIfcFile(ifcFileLocation).then((ifcData) => {
           modelID = ifcapi.OpenModel(ifcData);
           let elements = getAllElements(modelID, IFCSITE);
-          const name = elements.map((element) => element.Name.value);
-          console.log(name);
+          const filteredElements = elements.filter((element) => {
+            const nameValue = element.Name.value;
+            return nameValue !== null && !/\d{3}/.test(nameValue);
+          });
+          const name = filteredElements.map((element) => element.Name.value);
           setName((prevState) => ({ ...prevState, Site: name }));
           ifcapi.CloseModel(modelID);
         });
@@ -199,8 +218,11 @@ export default function useIfc() {
         getIfcFile(ifcFileLocation).then((ifcData) => {
           modelID = ifcapi.OpenModel(ifcData);
           let elements = getAllElements(modelID, IFCBUILDING);
-          const name = elements.map((element) => element.Name.value);
-          console.log(name);
+          const filteredElements = elements.filter((element) => {
+            const nameValue = element.Name.value;
+            return nameValue !== null && !/\d{3}/.test(nameValue);
+          });
+          const name = filteredElements.map((element) => element.Name.value);
           setName((prevState) => ({ ...prevState, Bâtiments: name }));
           ifcapi.CloseModel(modelID);
         });
@@ -212,9 +234,12 @@ export default function useIfc() {
         getIfcFile(ifcFileLocation).then((ifcData) => {
           modelID = ifcapi.OpenModel(ifcData);
           let elements = getAllElements(modelID, IFCBUILDINGSTOREY);
-          const name = elements.map((element) => element.Name.value);
+          const filteredElements = elements.filter((element) => {
+            const nameValue = element.Name.value;
+            return nameValue !== null && !/\d{3}/.test(nameValue);
+          });
+          const name = filteredElements.map((element) => element.Name.value);
           setName((prevState) => ({ ...prevState, Etage: name }));
-          console.log(name);
           ifcapi.CloseModel(modelID);
         });
       });
@@ -225,10 +250,12 @@ export default function useIfc() {
         getIfcFile(ifcFileLocation).then((ifcData) => {
           modelID = ifcapi.OpenModel(ifcData);
           let elements = getAllElements(modelID, IFCSPACE);
-          const longNames = elements.map((element) => element.LongName.value);
-          console.log(
-            "🚀 ~ file: ifc.js:220 ~ getIfcFile ~ longNames:",
-            longNames
+          const filteredElements = elements.filter((element) => {
+            const nameValue = element.LongName.value;
+            return nameValue !== null && !/\d{3}/.test(nameValue);
+          });
+          const longNames = filteredElements.map(
+            (element) => element.LongName.value
           );
           setName((prevState) => ({ ...prevState, Pièce: longNames }));
           ifcapi.CloseModel(modelID);
