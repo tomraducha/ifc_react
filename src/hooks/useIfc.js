@@ -24,14 +24,20 @@ import {
   IFCBUILDINGSTOREY,
 } from "web-ifc/web-ifc-api";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
-// import { viewer } from "web-ifc-viewer";
+// import { IfcViewerAPI } from "web-ifc-viewer";
 
 export default function useIfc() {
   const [name, setName] = useState({
     Site: null,
-    Bâtiments: null,
-    Etage: null,
-    Pièce: null,
+    Buildings: null,
+    Floors: null,
+    Rooms: null,
+  });
+  const [lengthName, setLengthName] = useState({
+    Site: null,
+    Buildings: null,
+    Floors: null,
+    Rooms: null,
   });
 
   useEffect(() => {
@@ -138,20 +144,6 @@ export default function useIfc() {
       false
     );
 
-    // window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
-    // window.onclick = () => viewer.IFC.selector.pickIfcItem(true);
-    // window.onclick = async () => {
-    //   const { modelID, id } = await viewer.IFC.selector.pickIfcItem(true);
-    //   const props = await viewer.IFC.getProperties(modelID, id, true, false);
-    //   console.log(props);
-    // };
-    // window.ondblclick = viewer.IFC.selector.highlightIfcItem(true);
-    // window.onkeydown = (event) => {
-    //   if (event.code === "KeyC") {
-    //     viewer.IFC.selector.unpickIfcItems();
-    //     viewer.IFC.selector.unHighlightIfcItems();
-    //   }
-    // };
     /**
      *
      * Requests the data from the url
@@ -208,6 +200,7 @@ export default function useIfc() {
           });
           const name = filteredElements.map((element) => element.Name.value);
           setName((prevState) => ({ ...prevState, Site: name }));
+          setLengthName((prevState) => ({ ...prevState, Site: name.length }));
           ifcapi.CloseModel(modelID);
         });
       });
@@ -223,7 +216,11 @@ export default function useIfc() {
             return nameValue !== null && !/\d{3}/.test(nameValue);
           });
           const name = filteredElements.map((element) => element.Name.value);
-          setName((prevState) => ({ ...prevState, Bâtiments: name }));
+          setName((prevState) => ({ ...prevState, Buildings: name }));
+          setLengthName((prevState) => ({
+            ...prevState,
+            Buildings: name.length,
+          }));
           ifcapi.CloseModel(modelID);
         });
       });
@@ -239,7 +236,8 @@ export default function useIfc() {
             return nameValue !== null && !/\d{3}/.test(nameValue);
           });
           const name = filteredElements.map((element) => element.Name.value);
-          setName((prevState) => ({ ...prevState, Etage: name }));
+          setName((prevState) => ({ ...prevState, Floors: name }));
+          setLengthName((prevState) => ({ ...prevState, Floors: name.length }));
           ifcapi.CloseModel(modelID);
         });
       });
@@ -257,12 +255,16 @@ export default function useIfc() {
           const longNames = filteredElements.map(
             (element) => element.LongName.value
           );
-          setName((prevState) => ({ ...prevState, Pièce: longNames }));
+          setName((prevState) => ({ ...prevState, Rooms: longNames }));
+          setLengthName((prevState) => ({
+            ...prevState,
+            Rooms: longNames.length,
+          }));
           ifcapi.CloseModel(modelID);
         });
       });
     }
   }, []);
 
-  return { name };
+  return { name, lengthName };
 }

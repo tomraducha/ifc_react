@@ -20,7 +20,8 @@
     "three": "^0.141.0",
     "three-mesh-bvh": "^0.5.24",
     "web-ifc": "^0.0.33",
-    "web-ifc-three": "0.0.116"
+    "web-ifc-three": "0.0.116",
+    "web-ifc-viewer": "^1.0.216"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
