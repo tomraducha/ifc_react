@@ -13,6 +13,9 @@ function App() {
     <>
       <Header />
       <InputFile />
+      <p>Progress:</p>
+      <p id="progress-text">0</p>
+      <p>%</p>
       <Box sx={{ flexDirection: "row" }}>
         <Menu name={name} lengthName={lengthName} />
         <ThreeCanvas />

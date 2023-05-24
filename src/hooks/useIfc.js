@@ -24,7 +24,7 @@ import {
   IFCBUILDINGSTOREY,
 } from "web-ifc/web-ifc-api";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
-// import { IfcViewerAPI } from "web-ifc-viewer";
+import { Vector2 } from "three";
 
 export default function useIfc() {
   const [name, setName] = useState({
@@ -144,6 +144,22 @@ export default function useIfc() {
       false
     );
 
+    async function setUpMultiThreading() {
+      await ifcLoader.ifcManager.useWebWorkers(true, "IFCWorker.js");
+      await ifcLoader.ifcManager.setWasmPath("../../../");
+    }
+
+    setUpMultiThreading();
+
+    function setupProgressNotification() {
+      const progressText = document.getElementById("progress-text");
+      ifcLoader.ifcManager.setOnProgress((event) => {
+        const result = Math.trunc((event.loaded / event.total) * 100);
+        progressText.innerText = result.toString();
+      });
+    }
+
+    setupProgressNotification();
     /**
      *
      * Requests the data from the url

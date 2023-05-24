@@ -40,5 +40,36 @@ body{
     z-index: 10;
 
 }
+.bim-app {
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+}
 
+.tree-menu {
+    background-color: white;
+    padding: 2rem;
+    width: 30%;
+    max-height: 100vh;
+    overflow: auto;
+}
+
+.leaf-node {
+    margin-left: 2rem;
+}
+
+ul, #myUL {
+    list-style-type: none;
+}
+
+#myUL {
+    margin: 0;
+    padding: 0;
+}
+
+#viewer-container {
+    position: relative;
+    width: 70%;
+    height: 100vh;
+}
   
