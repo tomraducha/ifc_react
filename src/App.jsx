@@ -4,22 +4,39 @@ import ThreeCanvas from "./components/ThreeCanvas";
 import { Box } from "@mui/material";
 import Menu from "./components/Menu";
 import useIfc from "./hooks/useIfc";
+import CardProperties from "./components/CardProperties";
+import { useState } from "react";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#f00", // Votre couleur principale ici
+    },
+    // autres options de thème...
+  },
+});
 
 function App() {
-  const { name } = useIfc();
-  const { lengthName } = useIfc();
+  const { name, lengthName, properties } = useIfc();
+  const [selectedElement, setSelectedElement] = useState(null);
 
   return (
     <>
-      <Header />
-      <InputFile />
-      <p>Progress:</p>
-      <p id="progress-text">0</p>
-      <p>%</p>
-      <Box sx={{ flexDirection: "row" }}>
-        <Menu name={name} lengthName={lengthName} />
-        <ThreeCanvas />
-      </Box>
+      <ThemeProvider theme={theme}>
+        <Header />
+        <InputFile />
+        <Box sx={{ flexDirection: "row" }}>
+          <Menu
+            name={name}
+            lengthName={lengthName}
+            properties={properties}
+            setSelectedElement={setSelectedElement}
+          />
+          <CardProperties selectedElement={selectedElement} />
+          <ThreeCanvas />
+        </Box>
+      </ThemeProvider>
     </>
   );
 }

@@ -10,7 +10,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Raycaster } from "three";
+import { Raycaster, BufferGeometry } from "three";
 import {
   acceleratedRaycast,
   computeBoundsTree,
@@ -24,7 +24,6 @@ import {
   IFCBUILDINGSTOREY,
 } from "web-ifc/web-ifc-api";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
-import { Vector2 } from "three";
 
 export default function useIfc() {
   const [name, setName] = useState({
@@ -34,6 +33,13 @@ export default function useIfc() {
     Rooms: null,
   });
   const [lengthName, setLengthName] = useState({
+    Site: null,
+    Buildings: null,
+    Floors: null,
+    Rooms: null,
+  });
+
+  const [properties, setProperties] = useState({
     Site: null,
     Buildings: null,
     Floors: null,
@@ -137,8 +143,13 @@ export default function useIfc() {
         initIfcBuilding(ifcURL);
         initIfcBuildingStorey(ifcURL);
         ifcLoader.load(ifcURL, (ifcModel) => {
+          if (
+            ifcModel.geometry !== undefined &&
+            ifcModel.geometry instanceof BufferGeometry
+          ) {
+            computeBoundsTree(ifcModel.geometry);
+          }
           scene.add(ifcModel);
-          console.log(ifcModel);
         });
       },
       false
@@ -150,16 +161,6 @@ export default function useIfc() {
     }
 
     setUpMultiThreading();
-
-    function setupProgressNotification() {
-      const progressText = document.getElementById("progress-text");
-      ifcLoader.ifcManager.setOnProgress((event) => {
-        const result = Math.trunc((event.loaded / event.total) * 100);
-        progressText.innerText = result.toString();
-      });
-    }
-
-    setupProgressNotification();
     /**
      *
      * Requests the data from the url
@@ -178,6 +179,7 @@ export default function useIfc() {
         oReq.send();
       });
     }
+    // ----------------------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Gets the elements of the requested model
@@ -210,6 +212,7 @@ export default function useIfc() {
         getIfcFile(ifcFileLocation).then((ifcData) => {
           modelID = ifcapi.OpenModel(ifcData);
           let elements = getAllElements(modelID, IFCSITE);
+          setProperties((prevState) => ({ ...prevState, Site: elements }));
           const filteredElements = elements.filter((element) => {
             const nameValue = element.Name.value;
             return nameValue !== null && !/\d{3}/.test(nameValue);
@@ -227,6 +230,7 @@ export default function useIfc() {
         getIfcFile(ifcFileLocation).then((ifcData) => {
           modelID = ifcapi.OpenModel(ifcData);
           let elements = getAllElements(modelID, IFCBUILDING);
+          setProperties((prevState) => ({ ...prevState, Buildings: elements }));
           const filteredElements = elements.filter((element) => {
             const nameValue = element.Name.value;
             return nameValue !== null && !/\d{3}/.test(nameValue);
@@ -247,6 +251,7 @@ export default function useIfc() {
         getIfcFile(ifcFileLocation).then((ifcData) => {
           modelID = ifcapi.OpenModel(ifcData);
           let elements = getAllElements(modelID, IFCBUILDINGSTOREY);
+          setProperties((prevState) => ({ ...prevState, Floors: elements }));
           const filteredElements = elements.filter((element) => {
             const nameValue = element.Name.value;
             return nameValue !== null && !/\d{3}/.test(nameValue);
@@ -263,6 +268,7 @@ export default function useIfc() {
       ifcapi.Init().then(() => {
         getIfcFile(ifcFileLocation).then((ifcData) => {
           modelID = ifcapi.OpenModel(ifcData);
+          setProperties((prevState) => ({ ...prevState, Rooms: elements }));
           let elements = getAllElements(modelID, IFCSPACE);
           const filteredElements = elements.filter((element) => {
             const nameValue = element.LongName.value;
@@ -282,5 +288,5 @@ export default function useIfc() {
     }
   }, []);
 
-  return { name, lengthName };
+  return { name, lengthName, properties };
 }
