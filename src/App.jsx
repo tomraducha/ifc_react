@@ -11,9 +11,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#f00", // Votre couleur principale ici
+      main: "#f00",
     },
-    // autres options de thème...
   },
 });
 
@@ -21,19 +20,36 @@ function App() {
   const { name, lengthName, properties } = useIfc();
   const [selectedElement, setSelectedElement] = useState(null);
 
+  function handleClose() {
+    setSelectedElement(null);
+  }
+
   return (
     <>
       <ThemeProvider theme={theme}>
         <Header />
         <InputFile />
-        <Box sx={{ flexDirection: "row" }}>
+        <Box
+          sx={{
+            flexDirection: "row",
+            position: "absolute",
+            top: 0,
+            zIndex: 1,
+            opacity: 0.9,
+          }}
+        >
+          <CardProperties
+            selectedElement={selectedElement}
+            onClose={handleClose}
+          />
           <Menu
             name={name}
             lengthName={lengthName}
             properties={properties}
             setSelectedElement={setSelectedElement}
           />
-          <CardProperties selectedElement={selectedElement} />
+        </Box>
+        <Box sx={{ flexDirection: "row" }}>
           <ThreeCanvas />
         </Box>
       </ThemeProvider>

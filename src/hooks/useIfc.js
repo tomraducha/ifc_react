@@ -143,6 +143,10 @@ export default function useIfc() {
         initIfcBuilding(ifcURL);
         initIfcBuildingStorey(ifcURL);
         ifcLoader.load(ifcURL, (ifcModel) => {
+          console.log(
+            "🚀 ~ file: useIfc.js:146 ~ ifcLoader.load ~ ifcModel:",
+            ifcModel
+          );
           if (
             ifcModel.geometry !== undefined &&
             ifcModel.geometry instanceof BufferGeometry

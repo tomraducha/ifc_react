@@ -3,6 +3,8 @@ import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { Card } from "@mui/material";
+
 function Menu({ name, lengthName, properties, setSelectedElement }) {
   const filteredSite = removeDuplicates(name.Site || []);
   const filteredBuildings = removeDuplicates(name.Buildings || []);
@@ -17,50 +19,67 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
     return arr.filter((item, index) => arr.indexOf(item) === index);
   }
 
-  function handleItemClick(element) {
+  function handleItemClick(element, index, parentNames) {
     setSelectedElement({
-      Name: element[0]?.Name?.value,
-      LongName: element[0]?.Description?.value,
-      Type: element[0]?.GlobalId?.value,
-      GUID: element[0]?.type,
+      Name: element[index]?.Name?.value,
+      LongName: element[index]?.Description?.value,
+      Type: element[index]?.GlobalId?.value,
+      GUID: element[index]?.type,
+      ...parentNames,
     });
   }
 
   return (
-    <>
+    <Card
+      sx={{
+        backgroundColor: "#CAEAFD",
+        width: "400px",
+        top: 0,
+        right: 1115,
+        zIndex: 1,
+        opacity: 0.9,
+      }}
+    >
       <TreeView
         aria-label="file system navigator"
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
-        sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: "auto" }}
       >
         {filteredSite.map((site, i) => (
           <TreeItem
             nodeId={`site-${i}`}
             label={formatLabel(site, lengthName.Buildings)}
             key={i}
-            onClick={() => handleItemClick(properties.Site)}
+            onClick={() => handleItemClick(properties.Site, i)}
           >
             {filteredBuildings.map((building, j) => (
               <TreeItem
                 nodeId={`building-${i}-${j}`}
                 label={formatLabel(building, lengthName.Floors)}
                 key={j}
-                onClick={() => handleItemClick(properties.Buildings)}
+                onClick={() =>
+                  handleItemClick(properties.Buildings, j, { Site: site })
+                }
               >
                 {filteredFloors.map((floor, k) => (
                   <TreeItem
                     nodeId={`floor-${i}-${j}-${k}`}
                     label={formatLabel(floor, lengthName.Rooms)}
                     key={k}
-                    onClick={() => handleItemClick(properties.Floors)}
+                    onClick={() =>
+                      handleItemClick(properties.Floors, k, {
+                        Building: building,
+                      })
+                    }
                   >
                     {filteredRooms.map((room, l) => (
                       <TreeItem
                         nodeId={`room-${i}-${j}-${k}-${l}`}
                         label={room}
                         key={l}
-                        onClick={() => handleItemClick(properties.Rooms)}
+                        onClick={() =>
+                          handleItemClick(properties.Rooms, l, { Floor: floor })
+                        }
                       />
                     ))}
                   </TreeItem>
@@ -70,7 +89,7 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
           </TreeItem>
         ))}
       </TreeView>
-    </>
+    </Card>
   );
 }
 
@@ -89,6 +108,7 @@ Menu.propTypes = {
   properties: PropTypes.shape({
     find: PropTypes.func,
   }).isRequired,
+  setSelectedElement: PropTypes.func.isRequired,
 };
 
 export default Menu;

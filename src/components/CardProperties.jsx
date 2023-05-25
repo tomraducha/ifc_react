@@ -1,20 +1,29 @@
 import PropTypes from "prop-types";
 import { Card, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/system";
+import { Button } from "@mui/material";
+import { Box } from "@mui/system";
 
-function CardProperties({ selectedElement }) {
-  const StyledCard = styled(Card)(({ theme }) => ({
-    // improvise fais moi une belle card
-    backgroundColor: "#f00",
-    color: "#fff",
-    width: "30%",
-    height: "30%",
-    position: "absolute",
-    top: 10,
-    right: 10,
+function CardProperties({ selectedElement, onClose }) {
+  const StyledCard = styled(Card)(() => ({
+    backgroundColor: "#2A698D",
+    fontWeight: "bold",
+    fontSize: "20px",
+    color: "#FF8000",
+    width: "400px",
+    top: 0,
+    right: 1115,
     zIndex: 1,
-    opacity: 0.5,
-    padding: theme.spacing(3),
+    opacity: 0.9,
+  }));
+
+  const CloseButton = styled(Button)(() => ({
+    position: "absolute",
+    top: -10,
+    right: -20,
+    color: "#FFF",
+    fontWeight: "bold",
+    fontSize: "20px",
   }));
 
   return (
@@ -22,18 +31,45 @@ function CardProperties({ selectedElement }) {
       {selectedElement && (
         <StyledCard>
           <CardContent>
-            <Typography variant="body2">
-              Name: {selectedElement.Name}
-            </Typography>
-            <Typography variant="body2">
-              Long Name: {selectedElement.LongName}
-            </Typography>
-            <Typography variant="body2">
-              Type: {selectedElement.Type}
-            </Typography>
-            <Typography variant="body2">
-              GUID: {selectedElement.GUID}
-            </Typography>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography
+                variant="h6"
+                style={{
+                  marginBottom: "40px",
+                  color: "#FFF",
+                  fontWeight: "bold",
+                }}
+              >
+                ℹ️ INFO
+              </Typography>
+              <CloseButton onClick={onClose}>X</CloseButton>
+            </Box>
+            {selectedElement.Name && (
+              <Typography style={{ marginBottom: "10px", fontSize: "14" }}>
+                Name: {selectedElement.Name}
+              </Typography>
+            )}
+            {selectedElement.LongName && (
+              <Typography style={{ marginBottom: "10px", fontSize: "14" }}>
+                Long Name: {selectedElement.LongName}
+              </Typography>
+            )}
+            {selectedElement.Type && (
+              <Typography style={{ marginBottom: "10px", fontSize: "14" }}>
+                {" "}
+                Type: {selectedElement.Type}
+              </Typography>
+            )}
+            {selectedElement.GUID && (
+              <Typography style={{ marginBottom: "10px", fontSize: "14" }}>
+                {" "}
+                GUID: {selectedElement.GUID}
+              </Typography>
+            )}
           </CardContent>
         </StyledCard>
       )}
@@ -43,6 +79,7 @@ function CardProperties({ selectedElement }) {
 
 CardProperties.propTypes = {
   selectedElement: PropTypes.object,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default CardProperties;
