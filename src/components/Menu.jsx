@@ -20,11 +20,12 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
   }
 
   function handleItemClick(element, index, parentNames) {
+    console.log("🚀 ~ file: Menu.jsx:23 ~ handleItemClick ~ element:", element);
     setSelectedElement({
       Name: element[index]?.Name?.value,
       LongName: element[index]?.Description?.value,
-      Type: element[index]?.GlobalId?.value,
-      GUID: element[index]?.type,
+      Type: element[index]?.type,
+      GUID: element[index]?.GlobalId?.value,
       ...parentNames,
     });
   }
