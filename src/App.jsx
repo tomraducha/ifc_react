@@ -1,6 +1,6 @@
-import Header from "./components/Header";
-import InputFile from "./components/InputFile";
-import ThreeCanvas from "./components/ThreeCanvas";
+import Header from "./components/Header/Header";
+import InputFile from "./components/InputFile/InputFile";
+import ThreeCanvas from "./components/ThreeCanvas/ThreeCanvas";
 import { Box } from "@mui/material";
 import useIfc from "./hooks/useIfc";
 import { useState } from "react";
