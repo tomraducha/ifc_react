@@ -4,9 +4,9 @@ import ThreeCanvas from "./components/ThreeCanvas";
 import { Box } from "@mui/material";
 import Menu from "./components/Menu";
 import useIfc from "./hooks/useIfc";
-import CardProperties from "./components/CardProperties";
 import { useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CardProperties from "./components/CardProperties/CardProperties";
 
 const theme = createTheme({
   palette: {
