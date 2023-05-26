@@ -3,7 +3,7 @@ import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { Card } from "@mui/material";
+import { StyledCard } from "./style";
 
 function Menu({ name, lengthName, properties, setSelectedElement }) {
   const filteredSite = removeDuplicates(name.Site || []);
@@ -31,16 +31,7 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
   }
 
   return (
-    <Card
-      sx={{
-        backgroundColor: "#CAEAFD",
-        width: "400px",
-        top: 0,
-        right: 1115,
-        zIndex: 1,
-        opacity: 0.9,
-      }}
-    >
+    <StyledCard>
       <TreeView
         aria-label="file system navigator"
         defaultCollapseIcon={<ExpandMoreIcon />}
@@ -90,7 +81,7 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
           </TreeItem>
         ))}
       </TreeView>
-    </Card>
+    </StyledCard>
   );
 }
 

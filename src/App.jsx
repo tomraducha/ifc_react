@@ -2,11 +2,11 @@ import Header from "./components/Header";
 import InputFile from "./components/InputFile";
 import ThreeCanvas from "./components/ThreeCanvas";
 import { Box } from "@mui/material";
-import Menu from "./components/Menu";
 import useIfc from "./hooks/useIfc";
 import { useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CardProperties from "./components/CardProperties/CardProperties";
+import Menu from "./components/Menu/Menu";
 
 const theme = createTheme({
   palette: {
