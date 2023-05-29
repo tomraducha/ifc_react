@@ -144,15 +144,24 @@ export default function useIfc() {
         initIfcSite(ifcURL);
         initIfcBuilding(ifcURL);
         initIfcBuildingStorey(ifcURL);
-        ifcLoader.load(ifcURL, (ifcModel) => {
-          /* if (
+        ifcLoader.load(
+          ifcURL,
+          (ifcModel) => {
+            /* if (
               ifcModel.geometry !== undefined &&
               ifcModel.geometry instanceof BufferGeometry
             ) {
               computeBoundsTree();
             } */
-          scene.add(ifcModel);
-        });
+            scene.add(ifcModel);
+          },
+          (progress) => {
+            console.log("Progress: ", progress);
+          },
+          (error) => {
+            console.log("Error: ", error);
+          }
+        );
       },
       false
     );
