@@ -6,8 +6,21 @@ import {
   InfoTypography,
   DataTypography,
 } from "./style";
+import { useEffect, useState } from "react";
+import useIfc from "../../hooks/useIfc";
 
 function CardProperties({ selectedElement, onClose }) {
+  const { ifcApi } = useIfc();
+  const [typeName, setTypeName] = useState("");
+
+  useEffect(() => {
+    if (!selectedElement || !ifcApi) {
+      return;
+    }
+    const typeName = ifcApi.GetNameFromTypeCode(selectedElement.Type);
+    setTypeName(typeName);
+  }, [ifcApi, selectedElement]);
+
   return (
     <>
       {selectedElement && (
@@ -26,7 +39,7 @@ function CardProperties({ selectedElement, onClose }) {
               </DataTypography>
             )}
             {selectedElement.Type && (
-              <DataTypography>Type: {selectedElement.Type}</DataTypography>
+              <DataTypography>Type: {typeName}</DataTypography>
             )}
             {selectedElement.GUID && (
               <DataTypography>GUID: {selectedElement.GUID}</DataTypography>
