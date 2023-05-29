@@ -44,6 +44,11 @@ function CardProperties({ selectedElement, onClose }) {
             {selectedElement.GUID && (
               <DataTypography>GUID: {selectedElement.GUID}</DataTypography>
             )}
+            {selectedElement.Assignment && (
+              <DataTypography>
+                Assignement: {selectedElement.Assignment}
+              </DataTypography>
+            )}
           </CardContent>
         </StyledCard>
       )}

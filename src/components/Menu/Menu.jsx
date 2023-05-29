@@ -20,7 +20,6 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
   }
 
   function handleItemClick(element, index, parentNames) {
-    console.log("🚀 ~ file: Menu.jsx:23 ~ handleItemClick ~ element:", element);
     setSelectedElement({
       Name: element[index]?.Name?.value,
       LongName: element[index]?.Description?.value,
@@ -29,6 +28,10 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
       ...parentNames,
     });
   }
+  console.log(
+    "🚀 ~ file: Menu.jsx:32 ~ handleItemClick ~ setSelectedElement:",
+    setSelectedElement
+  );
 
   return (
     <StyledCard>
@@ -42,7 +45,7 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
             nodeId={`site-${i}`}
             label={formatLabel(site, lengthName.Buildings)}
             key={i}
-            onClick={() => handleItemClick(properties.Site, i)}
+            onClick={() => handleItemClick(properties.Site, i, {})}
           >
             {filteredBuildings.map((building, j) => (
               <TreeItem
@@ -50,7 +53,9 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
                 label={formatLabel(building, lengthName.Floors)}
                 key={j}
                 onClick={() =>
-                  handleItemClick(properties.Buildings, j, { Site: site })
+                  handleItemClick(properties.Buildings, j, {
+                    Assignment: site,
+                  })
                 }
               >
                 {filteredFloors.map((floor, k) => (
@@ -60,7 +65,7 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
                     key={k}
                     onClick={() =>
                       handleItemClick(properties.Floors, k, {
-                        Building: building,
+                        Assignment: building,
                       })
                     }
                   >
@@ -70,7 +75,9 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
                         label={room}
                         key={l}
                         onClick={() =>
-                          handleItemClick(properties.Rooms, l, { Floor: floor })
+                          handleItemClick(properties.Rooms, l, {
+                            Assignment: floor,
+                          })
                         }
                       />
                     ))}
