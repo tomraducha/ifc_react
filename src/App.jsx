@@ -29,12 +29,6 @@ function App() {
       <ThemeProvider theme={theme}>
         <Header />
         <InputFile />
-        <div className="message-container">
-          <p className="message">Properties:</p>
-          <pre className="message" id="id-output">
-            None
-          </pre>
-        </div>
         <Box
           sx={{
             flexDirection: "row",
