@@ -28,10 +28,6 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
       ...parentNames,
     });
   }
-  console.log(
-    "🚀 ~ file: Menu.jsx:32 ~ handleItemClick ~ setSelectedElement:",
-    setSelectedElement
-  );
 
   return (
     <StyledCard>
@@ -106,6 +102,10 @@ Menu.propTypes = {
   }).isRequired,
   properties: PropTypes.shape({
     find: PropTypes.func,
+    Rooms: PropTypes.array,
+    Floors: PropTypes.array,
+    Buildings: PropTypes.array,
+    Site: PropTypes.array,
   }).isRequired,
   setSelectedElement: PropTypes.func.isRequired,
 };

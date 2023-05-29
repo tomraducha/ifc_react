@@ -279,8 +279,8 @@ export default function useIfc() {
       ifcapi.Init().then(() => {
         getIfcFile(ifcFileLocation).then((ifcData) => {
           modelID = ifcapi.OpenModel(ifcData);
-          setProperties((prevState) => ({ ...prevState, Rooms: elements }));
           let elements = getAllElements(modelID, IFCSPACE);
+          setProperties((prevState) => ({ ...prevState, Rooms: elements }));
           const filteredElements = elements.filter((element) => {
             const nameValue = element.LongName.value;
             return nameValue !== null && !/\d{3}/.test(nameValue);
