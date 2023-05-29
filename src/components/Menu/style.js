@@ -8,4 +8,6 @@ export const StyledCard = styled(Card)`
   right: 1115px;
   z-index: 1;
   opacity: 0.9;
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
 `;

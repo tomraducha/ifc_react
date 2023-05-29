@@ -26,9 +26,14 @@ export const InfoTypography = styled(Typography)`
   margin-bottom: 40px;
   color: #fff;
   font-weight: bold;
+  font-family: "Open Sans", sans-serif;
 `;
 
 export const DataTypography = styled(Typography)`
   margin-bottom: 10px;
+  color: #ffba00;
   font-size: 14px;
+  font-family: "Open Sans", sans-serif;
+  text-shadow: 3px 2px #2a698d;
+  font-weight: bold;
 `;
