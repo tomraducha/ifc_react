@@ -34,6 +34,5 @@ export const DataTypography = styled(Typography)`
   color: #ffba00;
   font-size: 14px;
   font-family: "Open Sans", sans-serif;
-  text-shadow: 3px 2px #2a698d;
   font-weight: bold;
 `;
