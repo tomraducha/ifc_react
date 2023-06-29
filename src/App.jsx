@@ -1,11 +1,13 @@
-import Header from "./components/Header";
-import InputFile from "./components/InputFile";
-import ThreeCanvas from "./components/ThreeCanvas";
-import { Box } from "@mui/material";
-import Menu from "./components/Menu";
+/* BTIB */
+import Header from "./components/Header/Header";
+import InputFile from "./components/InputFile/InputFile";
+import ThreeCanvas from "./components/ThreeCanvas/ThreeCanvas";
+import CardProperties from "./components/CardProperties/CardProperties";
+import Menu from "./components/Menu/Menu";
 import useIfc from "./hooks/useIfc";
-import CardProperties from "./components/CardProperties";
+/* Libs & plugins */
 import { useState } from "react";
+import { Box } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
@@ -20,9 +22,17 @@ function App() {
   const { name, lengthName, properties } = useIfc();
   const [selectedElement, setSelectedElement] = useState(null);
 
+  ////////////////////////////////////////////////////////////////
+  // Event handlers
+  ////////////////////////////////////////////////////////////////
+
   function handleClose() {
     setSelectedElement(null);
   }
+
+  ////////////////////////////////////////////////////////////////
+  // JSX
+  ////////////////////////////////////////////////////////////////
 
   return (
     <>

@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "npm run copy-wasm-files && vite",
+    "build": "npm run copy-wasm-files && vite build",
+    "copy-wasm-files": "COPY .\\node_modules\\web-ifc\\web-ifc.wasm public && COPY .\\node_modules\\web-ifc\\web-ifc-mt.wasm public && COPY .\\node_modules\\web-ifc-three\\IFCWorker.js public && COPY .\\node_modules\\web-ifc-three\\IFCWorker.js.map public",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -15,13 +16,12 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.130",
     "@mui/material": "^5.13.1",
+    "ifc": "^1.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "three": "^0.141.0",
-    "three-mesh-bvh": "^0.5.24",
-    "web-ifc": "^0.0.33",
-    "web-ifc-three": "0.0.116",
-    "web-ifc-viewer": "^1.0.216"
+    "styled-components": "^5.3.11",
+    "three": "^0.152.2",
+    "web-ifc-three": "^0.0.125"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

@@ -1,3 +1,6 @@
+/**
+ * Filter the provided elements array
+ **/
 function filterElements(elements) {
   const filteredElements = elements.filter((element) => {
     const nameValue = element.Name.value;
