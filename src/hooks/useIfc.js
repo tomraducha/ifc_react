@@ -1,6 +1,13 @@
-// useIfc.js
+/* Libs & plugins */
 import { useEffect, useState } from "react";
-import {
+import { Raycaster } from "three";
+import { IFCLoader } from "web-ifc-three/IFCLoader";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import * as threeIFc from "three";
+import * as threeMeshBvhIfc from "three-mesh-bvh";
+import * as webIfc from "web-ifc";
+
+const {
   AmbientLight,
   AxesHelper,
   DirectionalLight,
@@ -8,22 +15,12 @@ import {
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
-} from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Raycaster } from "three";
-import {
-  acceleratedRaycast,
-  computeBoundsTree,
-  disposeBoundsTree,
-} from "three-mesh-bvh";
-import {
-  IfcAPI,
-  IFCSPACE,
-  IFCSITE,
-  IFCBUILDING,
-  IFCBUILDINGSTOREY,
-} from "web-ifc";
-import { IFCLoader } from "web-ifc-three/IFCLoader";
+} = threeIFc;
+
+const { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } =
+  threeMeshBvhIfc;
+
+const { IfcAPI, IFCSPACE, IFCSITE, IFCBUILDING, IFCBUILDINGSTOREY } = webIfc;
 
 export default function useIfc() {
   const [name, setName] = useState({
@@ -74,7 +71,6 @@ export default function useIfc() {
 
     //Creates the lights of the scene
     const lightColor = 0xffffff;
-
     const ambientLight = new AmbientLight(lightColor, 0.5);
     scene.add(ambientLight);
 
@@ -147,12 +143,6 @@ export default function useIfc() {
         ifcLoader.load(
           ifcURL,
           (ifcModel) => {
-            /* if (
-              ifcModel.geometry !== undefined &&
-              ifcModel.geometry instanceof BufferGeometry
-            ) {
-              computeBoundsTree();
-            } */
             scene.add(ifcModel);
           },
           (progress) => {
@@ -166,19 +156,20 @@ export default function useIfc() {
       false
     );
 
+    /**
+     *  This function sets the path to the WebAssembly binary that the ifcManager uses for multi-threading.
+     **/
+
     async function setUpMultiThreading() {
       await ifcLoader.ifcManager.setWasmPath("../../../");
-      //await ifcLoader.ifcManager.useWebWorkers(true, "../../../IFCWorker.js");
     }
 
     setUpMultiThreading();
+
     /**
-     *
-     * Requests the data from the url
-     *
-     * @param {string} url
-     * @returns
-     */
+     * Fetches an IFC file from a given URL and returns it as an array buffer.
+     **/
+
     function getIfcFile(url) {
       return new Promise((resolve) => {
         var oReq = new XMLHttpRequest();
@@ -190,15 +181,11 @@ export default function useIfc() {
         oReq.send();
       });
     }
-    // ----------------------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Gets the elements of the requested model
-     *
-     * @param {string} modelID The model ID
-     * @param {string} model The model type to retrieve
-     * @returns
-     */
+     **/
+
     function getAllElements(modelID, model) {
       // Get all the propertyset lines in the IFC file
       let lines = ifcapi.GetLineIDsWithType(modelID, model);
@@ -213,11 +200,11 @@ export default function useIfc() {
       }
       return spaces;
     }
+
     /**
-     * Initializes the ifcApi to request data.
-     *
-     * @param {string} ifcFileLocation
-     */
+     * Initializes the ifcApi to request site data from an IFC file.
+     **/
+
     function initIfcSite(ifcFileLocation) {
       ifcapi.Init().then(() => {
         getIfcFile(ifcFileLocation).then((ifcData) => {
@@ -235,6 +222,10 @@ export default function useIfc() {
         });
       });
     }
+
+    /**
+     * Initializes the ifcApi to request building data from an IFC file.
+     **/
 
     function initIfcBuilding(ifcFileLocation) {
       ifcapi.Init().then(() => {
@@ -257,6 +248,10 @@ export default function useIfc() {
       });
     }
 
+    /**
+     * Initializes the ifcApi to request building story data from an IFC file.
+     **/
+
     function initIfcBuildingStorey(ifcFileLocation) {
       ifcapi.Init().then(() => {
         getIfcFile(ifcFileLocation).then((ifcData) => {
@@ -274,6 +269,10 @@ export default function useIfc() {
         });
       });
     }
+
+    /**
+     * Initializes the ifcApi to request space data from an IFC file.
+     **/
 
     function initIfcSpace(ifcFileLocation) {
       ifcapi.Init().then(() => {

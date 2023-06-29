@@ -1,13 +1,12 @@
-import PropTypes from "prop-types";
-import { CardContent } from "@mui/material";
-import {
-  StyledCard,
-  CloseButton,
-  InfoTypography,
-  DataTypography,
-} from "./style";
-import { useEffect, useState } from "react";
+/* BTIB */
 import useIfc from "../../hooks/useIfc";
+import * as styled from "./style";
+/* Libs & plugins */
+import { useEffect, useState } from "react";
+import { CardContent } from "@mui/material";
+import PropTypes from "prop-types";
+
+const { StyledCard, CloseButton, InfoTypography, DataTypography } = styled;
 
 function CardProperties({ selectedElement, onClose }) {
   const { ifcApi } = useIfc();

@@ -1,9 +1,11 @@
-import PropTypes from "prop-types";
+/* BTIB */
+import { StyledCard } from "./style";
+/* Libs & plugins */
 import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { StyledCard } from "./style";
+import PropTypes from "prop-types";
 
 function Menu({ name, lengthName, properties, setSelectedElement }) {
   const filteredSite = removeDuplicates(name.Site || []);
@@ -11,13 +13,9 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
   const filteredFloors = removeDuplicates(name.Floors || []);
   const filteredRooms = removeDuplicates(name.Rooms || []);
 
-  function formatLabel(label, length) {
-    return length ? `${label} (${length})` : label;
-  }
-
-  function removeDuplicates(arr) {
-    return arr.filter((item, index) => arr.indexOf(item) === index);
-  }
+  ////////////////////////////////////////////////////////////////
+  // Event handlers
+  ////////////////////////////////////////////////////////////////
 
   function handleItemClick(element, index, parentNames) {
     setSelectedElement({
@@ -28,6 +26,22 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
       ...parentNames,
     });
   }
+
+  ////////////////////////////////////////////////////////////////
+  // Methods
+  ////////////////////////////////////////////////////////////////
+
+  function formatLabel(label, length) {
+    return length ? `${label} (${length})` : label;
+  }
+
+  function removeDuplicates(arr) {
+    return arr.filter((item, index) => arr.indexOf(item) === index);
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // JSX
+  ////////////////////////////////////////////////////////////////
 
   return (
     <StyledCard>
@@ -89,24 +103,9 @@ function Menu({ name, lengthName, properties, setSelectedElement }) {
 }
 
 Menu.propTypes = {
-  name: PropTypes.shape({
-    Site: PropTypes.array,
-    Buildings: PropTypes.array,
-    Floors: PropTypes.array,
-    Rooms: PropTypes.array,
-  }).isRequired,
-  lengthName: PropTypes.shape({
-    Buildings: PropTypes.number,
-    Floors: PropTypes.number,
-    Rooms: PropTypes.number,
-  }).isRequired,
-  properties: PropTypes.shape({
-    find: PropTypes.func,
-    Rooms: PropTypes.array,
-    Floors: PropTypes.array,
-    Buildings: PropTypes.array,
-    Site: PropTypes.array,
-  }).isRequired,
+  name: PropTypes.object,
+  lengthName: PropTypes.object,
+  properties: PropTypes.object,
   setSelectedElement: PropTypes.func.isRequired,
 };
 
